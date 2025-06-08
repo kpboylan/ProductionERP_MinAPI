@@ -1,0 +1,6 @@
+@ProductionERP_MinAPI_HostAddress = http://localhost:5264
+
+GET {{ProductionERP_MinAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

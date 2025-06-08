@@ -14,7 +14,9 @@ namespace ProductionERP_MinAPI.Service
         {
             _bus = bus;
             _bus.QueueName = MessageQueue.AzureQueueName.materialqueue.ToString();
-            _connectionString = configuration["ServiceBus:ConnectionString"];
+            _connectionString = configuration["ServiceBus__ConnectionString"];
+
+            //_connectionString = configuration.GetConnectionString("ServiceBus:ConnectionString");
         }
         public async Task<string> PublishAsync(T item)
         {

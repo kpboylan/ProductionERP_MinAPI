@@ -13,7 +13,7 @@ namespace ProductionERP_MinAPI.Service
         public AzureServiceBusSvc(IConfiguration configuration, MessageBus bus)
         {
             _bus = bus;
-            _bus.QueueName = MessageQueue.AzureQueueName.materialqueue.ToString();
+            _bus.QueueName = MessageQueue.AzureQueueName.Material_Queue.ToString();
             //_connectionString = configuration["ServiceBus__ConnectionString"];
 
             _connectionString = configuration.GetConnectionString("ServiceBusConn");

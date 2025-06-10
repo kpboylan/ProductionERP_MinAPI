@@ -15,7 +15,7 @@ namespace ProductionERP_MinAPI.Enum
 
         public enum AzureQueueName
         {
-            [Description("materialqueue")]
+            [Description("material_queue")]
             materialqueue
         }
 

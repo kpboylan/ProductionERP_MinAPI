@@ -19,6 +19,7 @@ app.MapPost("/material", async (Material material, IAzureServiceBusSvc<Material>
 {
     try
     {
+        string test = "";
         var result = await busService.PublishAsync(material);
         return Results.Created($"/material/{material.MaterialID}", result);
     }

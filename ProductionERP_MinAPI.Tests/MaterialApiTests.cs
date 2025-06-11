@@ -34,8 +34,6 @@ namespace ProductionERP_MinAPI.Tests
             var response = await _client.PostAsync("/material", content);
 
             // Assert
-            Assert.True(false, "This test is meant to fail.");
-
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             _factory.BusServiceMock.Verify(svc => svc.PublishAsync(It.IsAny<Material>()), Times.Once);
         }

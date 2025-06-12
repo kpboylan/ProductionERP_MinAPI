@@ -1,0 +1,39 @@
+name: CI/CD - Production
+
+on:
+  workflow_dispatch:  # Manual trigger from Actions tab
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Run unit tests
+        run: dotnet test --no-restore --verbosity normal
+
+      - name: Publish API
+        run: dotnet publish -c Release -o ./publish
+
+  deploy-production:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    environment:
+      name: Production
+      url: https://minapi-production-h0grf5fsdnasffbf.westeurope-01.azurewebsites.net
+    steps:
+      - name: Deploy to Production (minapi-production)
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'minapi-production'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PRODUCTION }}
+          package: ./publish

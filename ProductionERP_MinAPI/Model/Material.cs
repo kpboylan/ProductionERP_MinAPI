@@ -14,6 +14,5 @@
         public int MaterialType { get; set; }
 
         public string? CountryCode { get; set; } = "IE";
-        public int ManufacturerID { get; set; }
     }
 }

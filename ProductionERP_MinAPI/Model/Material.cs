@@ -13,6 +13,6 @@
         public int UOMId { get; set; }
         public int MaterialType { get; set; }
 
-        public string? CountryCode { get; set; }
+        public string? CountryCode { get; set; } = "IE";
     }
 }

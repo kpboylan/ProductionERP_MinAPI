@@ -19,7 +19,7 @@ namespace ProductionERP_MinAPI.Tests
         public async Task PostMaterial_ReturnsCreated_WhenPublishSucceeds()
         {
             // Arrange
-            var material = new Material { MaterialID = 1, MaterialName = "TestMaterial" };
+            var material = new Material { MaterialID = 1, MaterialName = "TestMaterial", CountryCode = "UK" };
 
             _factory.BusServiceMock
                 .Setup(svc => svc.PublishAsync(It.IsAny<Material>()))

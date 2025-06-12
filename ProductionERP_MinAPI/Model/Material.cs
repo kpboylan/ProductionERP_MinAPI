@@ -12,5 +12,7 @@
         // foreign keys
         public int UOMId { get; set; }
         public int MaterialType { get; set; }
+
+        public string? CountryCode { get; set; }
     }
 }

@@ -3,8 +3,8 @@ name: CI/CD for Minimal API
 on:
   push:
     branches:
-      - main  # Triggers staging deploy
-  workflow_dispatch:  # Manual trigger for production deploy
+      - main  # Auto-deploys to Staging
+  workflow_dispatch:  # Manual trigger for Production
 
 jobs:
   build-and-test:
@@ -31,6 +31,9 @@ jobs:
     needs: build-and-test
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://minapi-staging-gbfbcze3bwhfg5ee.westeurope-01.azurewebsites.net/
     steps:
       - name: Deploy to Staging (minapi-staging)
         uses: azure/webapps-deploy@v2
@@ -43,6 +46,9 @@ jobs:
     needs: build-and-test
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    environment:
+      name: Production
+      url: https://minapi-production-h0grf5fsdnasffbf.westeurope-01.azurewebsites.net
     steps:
       - name: Deploy to Production (minapi-production)
         uses: azure/webapps-deploy@v2

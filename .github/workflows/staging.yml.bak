@@ -1,3 +1,5 @@
+# CI/CD pipeline for staging
+
 name: CI/CD - Staging
 
 on:

@@ -15,6 +15,6 @@
 
         public string? CountryCode { get; set; } = "IE";
         public int ManufacturerID { get; set; }
-        public DateTime Expiration { get; set; }
+        public DateTimeOffset Expiration { get; set; }
     }
 }

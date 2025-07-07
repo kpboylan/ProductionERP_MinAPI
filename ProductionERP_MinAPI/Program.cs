@@ -3,6 +3,27 @@ using ProductionERP_MinAPI.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200") // *** IMPORTANT: Replace with your Angular app's URL ***
+                   .AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowCredentials(); // If your Angular app sends credentials (like cookies or auth headers for MSAL)
+        });
+
+    // You can also add a more permissive policy for development
+    options.AddPolicy("AllowAllDevelopment",
+        builder =>
+        {
+            builder.AllowAnyOrigin() // NOT recommended for production
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -15,6 +36,8 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseCors("AllowSpecificOrigin");
 
 
 app.MapPost("/material", async (Material material, IAzureServiceBusSvc<Material> busService) =>

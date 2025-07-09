@@ -13,10 +13,16 @@ namespace ProductionERP_MinAPI.Enum
             UpdateMaterialQueue,
         }
 
-        public enum AzureQueueName
+        public enum AzureMaterialQueueName
         {
             [Description("Material_Queue")]
             Material_Queue
+        }
+
+        public enum AzureProductQueueName
+        {
+            [Description("Product_Queue")]
+            Product_Queue
         }
 
         public enum MessageHostName

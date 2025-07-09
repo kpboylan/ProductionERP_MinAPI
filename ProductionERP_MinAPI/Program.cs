@@ -29,8 +29,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<MessageBus>();
 builder.Services.AddScoped<IAzureServiceBusSvc<Material>, AzureServiceBusSvc<Material>>();
-
-builder.Services.AddScoped<IAzureServiceBusSvc<MaterialType>, AzureServiceBusSvc<MaterialType>>();
+builder.Services.AddScoped<IAzureServiceBusSvc<Product>, AzureServiceBusSvc<Product>>();
 
 var app = builder.Build();
 
@@ -53,12 +52,12 @@ app.MapPost("/material", async (Material material, IAzureServiceBusSvc<Material>
     }
 });
 
-app.MapPost("/materialType", async (MaterialType materialType, IAzureServiceBusSvc<MaterialType> busService) =>
+app.MapPost("/product", async (Product product, IAzureServiceBusSvc<Product> busService) =>
 {
     try
     {
-        var result = await busService.PublishAsync(materialType);
-        return Results.Created($"/materialType/{materialType.MaterialTypeID}", result);
+        var result = await busService.PublishAsync(product);
+        return Results.Created($"/product/{product.ProductId}", result);
     }
     catch (Exception ex)
     {

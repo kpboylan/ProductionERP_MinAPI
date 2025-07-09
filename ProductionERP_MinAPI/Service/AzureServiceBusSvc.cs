@@ -13,12 +13,13 @@ namespace ProductionERP_MinAPI.Service
         public AzureServiceBusSvc(IConfiguration configuration, MessageBus bus)
         {
             _bus = bus;
-            _bus.QueueName = MessageQueue.AzureQueueName.Material_Queue.ToString();
-
+            
             _connectionString = configuration.GetConnectionString("ServiceBusConn");
         }
         public async Task<string> PublishAsync(T item)
         {
+            _bus.QueueName = GetQueueName(typeof(T).Name);
+
             var client = new ServiceBusClient(_connectionString);
             var sender = client.CreateSender(_bus.QueueName);
 
@@ -36,6 +37,22 @@ namespace ProductionERP_MinAPI.Service
             await client.DisposeAsync();
 
             return $"Processed item of type {typeof(T).Name}: {item}";
+        }
+
+        private string GetQueueName(string objectName)
+        {
+            if (objectName.ToLower() == "material") 
+            { 
+                return MessageQueue.AzureMaterialQueueName.Material_Queue.ToString();
+            }
+            else if (objectName.ToLower() == "product")
+            {
+                return MessageQueue.AzureProductQueueName.Product_Queue.ToString();
+            }
+            else
+            {
+                throw new Exception("Queue name not found");
+            }
         }
     }
 }

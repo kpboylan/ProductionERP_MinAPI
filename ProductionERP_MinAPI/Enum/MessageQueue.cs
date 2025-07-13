@@ -25,6 +25,12 @@ namespace ProductionERP_MinAPI.Enum
             Product_Queue
         }
 
+        public enum AzureEmailQueueName
+        {
+            [Description("Email_Queue")]
+            Email_Queue
+        }
+
         public enum MessageHostName
         {
             [Description("Localhost")]

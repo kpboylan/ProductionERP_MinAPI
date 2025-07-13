@@ -7,21 +7,27 @@ namespace ProductionERP_MinAPI.Service
 {
     public class AzureServiceBusSvc<T> : IAzureServiceBusSvc<T> where T : class
     {
-        private readonly string _connectionString;
+        private readonly string? _connectionString;
         private readonly MessageBus _bus;
+        private readonly IEmailServiceBusPublisher _emailPublisher;
+        private readonly string _materialQueueName;
+        private readonly string _productQueueName;
 
-        public AzureServiceBusSvc(IConfiguration configuration, MessageBus bus)
+        public AzureServiceBusSvc(IConfiguration configuration, MessageBus bus, IEmailServiceBusPublisher emailPublisher)
         {
             _bus = bus;
-            
             _connectionString = configuration.GetConnectionString("ServiceBusConn");
+            _materialQueueName = configuration["AzureServiceBus:MaterialQueueName"] ?? "Material_Queue";
+            _productQueueName = configuration["AzureServiceBus:ProductQueueName"] ?? "Product_Queue";
+            _emailPublisher = emailPublisher;
         }
         public async Task<string> PublishAsync(T item)
         {
-            _bus.QueueName = GetQueueName(typeof(T).Name);
+            string queueName = GetQueueName(typeof(T).Name);
+            _bus.QueueName = queueName;
 
-            var client = new ServiceBusClient(_connectionString);
-            var sender = client.CreateSender(_bus.QueueName);
+            await using var client = new ServiceBusClient(_connectionString);
+            await using var sender = client.CreateSender(_bus.QueueName);
 
             string messageBody = JsonSerializer.Serialize(item);
 
@@ -33,8 +39,10 @@ namespace ProductionERP_MinAPI.Service
 
             await sender.SendMessageAsync(message);
 
-            await sender.DisposeAsync();
-            await client.DisposeAsync();
+            if (queueName == _productQueueName)
+            {
+                await _emailPublisher.PublishEmailNotificationAsync(item, "ProductAdded");
+            }
 
             return $"Processed item of type {typeof(T).Name}: {item}";
         }
@@ -43,15 +51,15 @@ namespace ProductionERP_MinAPI.Service
         {
             if (objectName.ToLower() == "material") 
             { 
-                return MessageQueue.AzureMaterialQueueName.Material_Queue.ToString();
+                return _materialQueueName;
             }
             else if (objectName.ToLower() == "product")
             {
-                return MessageQueue.AzureProductQueueName.Product_Queue.ToString();
+                return _productQueueName;
             }
             else
             {
-                throw new Exception("Queue name not found");
+                throw new ArgumentException("Queue name not found");
             }
         }
     }

@@ -30,6 +30,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<MessageBus>();
 builder.Services.AddScoped<IAzureServiceBusSvc<Material>, AzureServiceBusSvc<Material>>();
 builder.Services.AddScoped<IAzureServiceBusSvc<Product>, AzureServiceBusSvc<Product>>();
+builder.Services.AddTransient<IEmailServiceBusPublisher, EmailServiceBusPublisher>();
 
 var app = builder.Build();
 
